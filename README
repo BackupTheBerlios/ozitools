@@ -1,0 +1,17 @@
+You must have GDAL library installed (http://gdal.osgeo.org)
+as well as it's Perl bindings to make ozitools work.
+Also libtiff and zlib are required.
+
+Just issue a command in Fedora-like distros before building
+the package:
+
+yum install libtiff-devel zlib-devel gdal-perl
+
+Everything should build with the customary:
+
+./configure
+make
+make install
+
+Remember that "./configure --help" will show all the options available
+to help cope with odd setups, installations, and paths.

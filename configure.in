@@ -1,0 +1,41 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.63])
+AC_INIT([ozitools], [1.0.0], [dev@beonway.ru])
+AC_CONFIG_SRCDIR([src/ozf2tiff.c])
+AC_CONFIG_HEADERS([config.h])
+
+AM_INIT_AUTOMAKE(ozitools, 1.0.0)
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_SED
+AC_PATH_PROG(CHMOD, chmod)
+AC_PATH_PROG(PERL, perl)
+AC_PATH_PROG(GDAL_TRANSLATE, gdal_translate)
+AC_PATH_PROG(GDALWARP, gdalwarp)
+
+AC_CHECK_PERL_MODULES(Geo::OSR,,AC_MSG_WARN(Need GDAL Perl bingings))
+AC_CHECK_PERL_MODULES(Geo::GDAL,,AC_MSG_WARN(Need GDAL Perl bingings))
+AC_CHECK_PERL_MODULES(Getopt::Long,,AC_MSG_WARN(Need Getopt::Long Perl module))
+
+# Checks for libraries.
+AC_CHECK_LIB(tiff, main)
+AC_CHECK_LIB(z, main)
+
+# Checks for header files.
+AC_CHECK_HEADERS([fcntl.h stdlib.h stdint.h sys/stat.h sys/types.h sys/mman.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_INT16_T
+AC_TYPE_UINT16_T
+AC_TYPE_INT32_T
+AC_TYPE_OFF_T
+AC_TYPE_SIZE_T
+
+# Checks for library functions.
+AC_FUNC_MMAP
+
+AC_OUTPUT(Makefile src/Makefile)

@@ -1,0 +1,27 @@
+# ignore the following content
+
+# all files starting with dot
+.*
+# except itself
+!.gitignore
+
+# all logs
+*.log
+
+# autoscan output
+configure.scan
+
+# autotools output
+autom4te.cache/
+Makefile
+*~
+
+# build and test stuff
+build/
+test/
+
+# any other objects etc.
+*.[oa]
+*.obj
+.deps/
+

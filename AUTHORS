@@ -1,0 +1,16 @@
+ozf2tiff utility:
+
+ * Added support for Tiled TIFF output
+ * Luca Cristelli (luca.cristelli@ies.it) 1/2001
+ *
+ * This r.tiff version uses the standard libtiff from your system.
+ * 8. June 98 Marco Valagussa <marco@duffy.crcc.it>
+ *
+ * Original version:
+ * Portions Copyright (c) 1988, 1990 by Sam Leffler.
+ * All rights reserved.
+ 
+map2geotiff utility:
+
+ * Initially created by Mikhail Rumyantsev <dev@beonway.ru>
+ 
