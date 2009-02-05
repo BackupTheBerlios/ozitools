@@ -48,6 +48,11 @@ use constant KEY_POINT_GRID_Y => "pointGridY";
 use constant KEY_POINT_UTM_ZONE => "pointUTMZone";
 use constant KEY_POINT_UTM_HEMISPHERE => "pointUTMHem";
 
+%opts = ();
+
+Getopt::Long::Configure("bundling");
+GetOptions(\%opts, 'lzw|l', 'tiled|t', 'output-wgs84|w', 'output-reproject|p', 'tile-size-x=i', 'tile-size-y=i');
+
 %datumParams = (
 	'Pulkovo 1942 (1)' => 
 		'+ellps=krass +towgs84=23.92,-141.27,-80.9,0,-0.35,-0.82,-0.12',
@@ -158,9 +163,8 @@ sub parse_point {
 }
 
 sub main {
-	my $file = '';
+	my $file = $ARGV[0];
 	
-	GetOptions('map|m=s' => \$file);
 	print "file is " . $file . "\n";
 	
 	my $mapData = parse_map($file);
@@ -288,7 +292,7 @@ sub prepare_raster {
 sub to_tagged_gtiff {
 	my $map = shift;
 	
-	my @args = ("@GDAL_TRANSLATE@", "-of", "GTiff", "-co", "TILED=YES");
+	my @args = ("@GDAL_TRANSLATE@", "-of", "GTiff");
 
 	my ($datum, $proj) = map_proj_data($map);
 	
@@ -320,7 +324,12 @@ sub to_tagged_gtiff {
 sub warp {
 	my $map = shift;
 	
-	my @args = ("@GDALWARP@", "-of", "GTiff", "-co", "TILED=YES");
+	my @args = ("@GDALWARP@", "-of", "GTiff");
+
+	push @args, ("-co", "TILED=YES") if exists($opts{'tiled'});
+	push @args, ("-co", "COMPRESS=LZW") if exists($opts{'lzw'});
+	push @args, ("-co", "BLOCKXSIZE=". $opts{'tile-size-x'}) if exists($opts{'tile-size-x'});
+	push @args, ("-co", "BLOCKYSIZE=". $opts{'tile-size-y'}) if exists($opts{'tile-size-y'});
 
 	my ($datum, $proj) = map_proj_data($map);
 		
@@ -331,8 +340,11 @@ sub warp {
 	push @args, $map->{KEY_MAP_RASTER_HEIGHT};
 
 	my $s_srs = "+proj=latlong " . $datum . " +no_defs";
-	#my $t_srs = $proj . " " . $datum . " +no_defs";
-	my $t_srs = "+proj=latlong " . $datum . " +no_defs";
+	
+	my $out_datum = exists($opts{"output-wgs84"}) ? "+ellps=WGS84 +datum=WGS84" : $datum;
+	my $out_proj = exists($opts{"output-reproject"}) ? $proj : "+proj=latlong";
+	my $t_srs = $out_proj . " " . $out_datum . " +no_defs";
+
 	
 	push @args, "-s_srs";
 	push @args, $s_srs;
