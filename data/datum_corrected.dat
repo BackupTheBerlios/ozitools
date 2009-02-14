@@ -1,0 +1,40 @@
+Adindan:+ellps=clrk80 +towgs84=-165.0,-11.0,206.0,0.0,0.0,0.0,0.0 
+Ain el Abd 1970:+ellps=intl +towgs84=-18.944,-379.364,-24.063,0.04,0.764,-6.431,0.7543103964456315
+Arc 1950:+a=6378249.145 +b=6356514.966398753 +towgs84=-138.0,-105.0,-289.0,0.0,0.0,0.0,0.0
+Arc 1960:+ellps=clrk80 +towgs84=-157.0,-2.0,-299.0,0.0,0.0,0.0,0.0 
+Ascension Island 1958:+ellps=intl +towgs84=-205,107,53,0,0,0,0 
+Australian Geodetic 1966:+ellps=aust_SA +towgs84=-124.133,-42.003,137.4,-0.008,-0.557,-0.178,-0.3824149507821167
+Australian Geodetic 1984:+ellps=aust_SA +towgs84=-117.763,-51.51,139.061,0.292,-0.443,-0.277,-0.03939657799319541 
+Bogota Observatory:+ellps=intl +towgs84=304.5,306.5,-318.1,0.0,0.0,0.0,0.0 
+Campo Inchauspe:+ellps=intl +towgs84=-154.5,150.7,100.4,0.0,0.0,0.0,0.0 
+Cape:+a=6378249.145 +b=6356514.966398753 +towgs84=-136.0,-108.0,-292.0,0.0,0.0,0.0,0.0
+Cape Cannaveral:+ellps=clrk66 +towgs84=-2,151,181,0,0,0,0 
+Carthage:+a=6378249.2 +b=6356515 +towgs84=-260.1,5.5,432.2,0.0,0.0,0.0,0.0 
+CH-1903:+ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0
+Djakarta (Batavia):+ellps=bessel +towgs84=-377.7,675.1,-52.2,0.0,0.0,0.0,0.0 
+Geodetic Datum 1949:+ellps=intl +datum=nzgd49
+Hermannskogel:+ellps=bess_nam +datum=hermannskogel
+Hu-Tzu-Shan:+ellps=intl +towgs84=-637.0,-549.0,-203.0,0.0,0.0,0.0,0.0
+Israeli:+a=6378300.789 +b=6356566.435 +towgs84=-275.722,94.7824,340.894,-8.001,-4.42,-11.821,1
+Ireland 1965:+ellps=mod_airy +datum=ire65
+Johnston Island:+ellps=intl +towgs84=189,-79,-202,0,0,0,0 
+Kandawala:+a=6377276.345 +b=6356075.413140239 +towgs84=-97.0,787.0,86.0,0.0,0.0,0.0,0.0 
+Minna:+ellps=clrk80 +towgs84=-90.2,-87.32,114.17,0.0,0.0,0.0,0.0 
+NGO1948:+a=6377492.018 +b=6356173.508712696 +towgs84=278.3,93.0,474.5,7.889,0.05,-6.61,1.280904446794468
+NTF France:+a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris
+Old Hawaiian:+ellps=clrk66 +towgs84=58.0,-283.0,-182.0,0.0,0.0,0.0,0.0 
+Old Srvy Grt Britn:+ellps=airy +datum=OSGB36 +units=m 
+Potsdam Rauenberg DHDN:+ellps=bessel +datum=potsdam
+Prov So Amrican 1956:+ellps=intl +towgs84=-307.7,265.3,-363.5,0.0,0.0,0.0,0.0 
+Pulkovo 1942(1):+ellps=krass +towgs84=23.92,-141.27,-80.9,0,-0.35,-0.82,-0.12
+Pulkovo 1942(2):+ellps=krass +towgs84=23.92,-141.27,-80.9,0,-0.35,-0.82,-0.12
+Qatar National:+ellps=intl +towgs84=-128.033,-283.697,21.052,0.0,0.0,0.0,0.0 
+Qornoq:+ellps=intl +towgs84=163.511,127.533,-159.789,0.0,0.0,0.814,-0.12375888374825782
+RT 90:+ellps=bessel +towgs84=414.1,41.3,603.1,-0.855,-2.141,7.023,0.0 
+Sapper Hill 1943:+ellps=intl +towgs84=-355.0,21.0,72.0,0.0,0.0,0.0,0.0 
+South American 1969:+ellps=aust_SA +towgs84=-66.87,4.37,-38.52,0.0,0.0,0.0,0.0 
+South Asia:+ellps=fschr60m 
+Timbalai 1948:+ellps=evrstSS +towgs84=-533.4,669.2,-52.5,0.0,0.0,4.28,1.9388891787227058 
+Tokyo:+ellps=bessel +towgs84=-147.0,506.0,687.0,0.0,0.0,0.0,0.0 
+Wake-Eniwetok 1960:+a=6378270 +b=6356794.343434343 
+WGS 72:+ellps=WGS72 +towgs84=0,0,4.5,0,0,0.554,0.219 

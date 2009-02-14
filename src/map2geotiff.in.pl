@@ -363,3 +363,28 @@ sub warp {
 	return $map;	
 }
 
+package ProjData;
+
+sub new {
+	my $class = shift;
+	return bless {}, $class;
+}
+
+sub init {
+	my $self = shift;
+	my $map = shift;
+}
+
+sub options {
+	my ($self, %opts) = @_;
+	$self->{"opts"} = \%opts;
+}
+
+sub latlong {
+	
+}
+
+sub projected {
+	
+}
+

@@ -5,6 +5,7 @@ AC_PREREQ([2.63])
 AC_INIT([ozitools], [1.0.0], [dev@beonway.ru])
 AC_CONFIG_SRCDIR([src/ozf2tiff.c])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_FILES(Makefile src/Makefile data/Makefile)
 
 AM_INIT_AUTOMAKE(ozitools, 1.0.0)
 
@@ -38,4 +39,4 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_FUNC_MMAP
 
-AC_OUTPUT(Makefile src/Makefile)
+AC_OUTPUT
