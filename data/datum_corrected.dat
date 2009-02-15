@@ -26,8 +26,8 @@ Old Hawaiian:+ellps=clrk66 +towgs84=58.0,-283.0,-182.0,0.0,0.0,0.0,0.0
 Old Srvy Grt Britn:+ellps=airy +datum=OSGB36 +units=m 
 Potsdam Rauenberg DHDN:+ellps=bessel +datum=potsdam
 Prov So Amrican 1956:+ellps=intl +towgs84=-307.7,265.3,-363.5,0.0,0.0,0.0,0.0 
-Pulkovo 1942(1):+ellps=krass +towgs84=23.92,-141.27,-80.9,0,-0.35,-0.82,-0.12
-Pulkovo 1942(2):+ellps=krass +towgs84=23.92,-141.27,-80.9,0,-0.35,-0.82,-0.12
+Pulkovo 1942 (1):+ellps=krass +towgs84=23.92,-141.27,-80.9,0,-0.35,-0.82,-0.12
+Pulkovo 1942 (2):+ellps=krass +towgs84=23.92,-141.27,-80.9,0,-0.35,-0.82,-0.12
 Qatar National:+ellps=intl +towgs84=-128.033,-283.697,21.052,0.0,0.0,0.0,0.0 
 Qornoq:+ellps=intl +towgs84=163.511,127.533,-159.789,0.0,0.0,0.814,-0.12375888374825782
 RT 90:+ellps=bessel +towgs84=414.1,41.3,603.1,-0.855,-2.141,7.023,0.0 

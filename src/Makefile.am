@@ -10,6 +10,7 @@ EXTRA_DIST = map2geotiff.in.pl
 do_subst = $(SED) -e 's,[@]PERL[@],$(PERL),g' \
 	-e 's,[@]GDAL_TRANSLATE[@],$(GDAL_TRANSLATE),g' \
 	-e 's,[@]GDALWARP[@],$(GDALWARP),g' \
+	-e 's,[@]pkgdatadir[@],$(pkgdatadir),g' \
 	-e 's,[@]BINDIR[@],$(bindir),g'
 
 map2geotiff: map2geotiff.in.pl Makefile

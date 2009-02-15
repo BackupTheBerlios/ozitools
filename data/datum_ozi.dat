@@ -92,8 +92,8 @@ Potsdam Rauenberg DHDN:+ellps=bessel +towgs84=606.0,23.0,413.0,0,0,0,0
 Prov So Amrican 1956:+ellps=intl +towgs84=-288.0,175.0,-376.0,0,0,0,0 
 Prov So Chilean 1963:+ellps=intl +towgs84=16.0,196.0,93.0,0,0,0,0 
 Puerto Rico:+ellps=clrk66 +towgs84=11.0,72.0,-101.0,0.0,0.0,0.0,0.0 
-Pulkovo 1942(1):+ellps=krass +towgs84=28,-130,-95,0,0,0,0
-Pulkovo 1942(2):+ellps=krass +towgs84=28,-130,-95,0,0,0,0
+Pulkovo 1942 (1):+ellps=krass +towgs84=28,-130,-95,0,0,0,0
+Pulkovo 1942 (2):+ellps=krass +towgs84=28,-130,-95,0,0,0,0
 Qatar National:+ellps=intl +towgs84=-128.0,-283.0,22.0,0,0,0,0 
 Qornoq:+ellps=intl +towgs84=164,138,-189,0,0,0,0
 Reunion:+ellps=intl +towgs84=94.0,-948.0,-1252.0,0,0,0,0 
