@@ -41,6 +41,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING README
 %_bindir
+%_datadir/%{name}
 
 
 
