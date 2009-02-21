@@ -1,4 +1,4 @@
-#!@PERL@ -w
+#!@PERL@
 
 ################################################################################
 ## This program is free software; you can redistribute it and/or modify
@@ -23,84 +23,88 @@ use Geo::OSR;
 use Geo::GDAL;
 
 %opts = ();
+@tmpfiles = ();
 
 Getopt::Long::Configure("bundling");
-GetOptions(\%opts, 'lzw|l',
-	'tiled|t',
-	'output-wgs84|w',
-	'output-reproject|p',
-	'tile-size-x=i',
-	'tile-size-y=i',
-	'use-epsg|e');
 
-$projData = new ProjData (correct => $opts{'use-epsg'}, wgs84 => $opts{'output-wgs84'});
-$projData->init();
+{
+	my $oldwarn = $SIG{__WARN__};
+	$SIG{__WARN__} = sub {};
+	
+	GetOptions(\%opts,
+		'help|?',
+		'output-wgs84|w',
+		'output-projected|p',
+		'use-epsg|e',
+		'lzw|l',
+		'tiled|t',
+		'tile-size-x=i',
+		'tile-size-y=i',
+		'keep-raster-size|r',
+		'keep-tmpfiles') || help();
+		
+	$SIG{__WARN__} = $oldwarn;
+	
+}
+
+ProjData::init(correct => $opts{'use-epsg'});
 
 exit(main(@ARGV));
 
 sub main {
+	
+	help() if exists $opts{"help"};
+	help() if (scalar(@ARGV) > 1);
+	
 	my $file = $ARGV[0];
-	
-	print "file is " . $file . "\n";
-	
+	help() unless $file;
+		
 	my $mapData = MapData::parse($file);
 
-	#dump_map($mapData);
-		
 	$mapData = to_latlong($mapData);
 
-	#dump_map($mapData);
-	
 	$mapData = prepare_raster($mapData);
-
-	#dump_map($mapData);
 
 	$mapData = to_tagged_gtiff($mapData);
 	$mapData = warp($mapData);
-}
-
-sub dump_map {
-	my $mapData = shift;
-
-	$mapData->dump;
-	print "\n";
 	
-	foreach $p (@{$mapData->points}) {
-		print $p->dump;
-		print "\n";
-	}
+	unlink @tmpfiles unless exists($opts{'keep-tmpfiles'});
 }
 
-#sub map_proj_data {
-#	my $map = shift;
-#
-#	my $datum = $datumParams{$map->{KEY_MAP_DATUM}};
-#	die "Unknown datum " .  $map->{KEY_MAP_DATUM} unless $datum;
-#	
-#	my $projData = $map->{KEY_PROJECTION};
-#	my $proj = $projParams{$projData->{KEY_PROJECTION_NAME}};
-#	die "Unknown projection " .  $projData->{KEY_PROJECTION_NAME} unless $proj;
-#
-#	$proj = sprintf($proj,
-#		$projData->{KEY_PROJECTION_LAT_ORIGIN},
-#		$projData->{KEY_PROJECTION_LON_ORIGIN},
-#		$projData->{KEY_PROJECTION_SCALE_FACTOR},
-#		$projData->{KEY_PROJECTION_FALSE_EAST},
-#		$projData->{KEY_PROJECTION_FALSE_NORTH},
-#		$projData->{KEY_PROJECTION_LAT1},
-#		$projData->{KEY_PROJECTION_LAT2});
-#		
-#	return ($datum, $proj);
-#}
+sub help {
+	print STDERR <<HELP_END;
+map2geotiff - Converts OziExplorer maps to GeoTIFF.
+
+Usage: map2geotiff [options] file.map
+
+Options:
+		--help|-?				Get brief help on usage and options
+		--output-wgs84|-w		Recalculate output coordinates to WGS84 datum
+		--output-projected|-p	Apply .map specified projection to output raster
+		--use-epsg|-e			Use EPSG corrected datum/projection parameters
+								instead of OziExplorer ones.
+								See http://spatialreference.org for details.
+		--lzw|-l				Use LZW compression in output TIFF
+		--tiled|-t				Output tiled TIFF
+		--tile-size-x=n			Tile x size in pixels, 256 by default
+		--tile-size-y=n			Tile y size in pixels, 256 by default
+		--keep-raser-size|-r	Keep raster dimensions in pixels
+		--keep-tmpfiles			Do not delete intermediate temp files
+
+	
+HELP_END
+
+	exit(1);	
+}
 
 sub to_latlong {
 	my $map = shift;
 	
 	my $from = new Geo::OSR::SpatialReference();
-	$from->ImportFromProj4($projData->projected($map));
+	$from->ImportFromProj4(ProjData::projected($map));
 
 	my $to = new Geo::OSR::SpatialReference();
-	$to->ImportFromProj4($projData->latlong($map));
+	$to->ImportFromProj4(ProjData::latlong($map));
 
 	foreach $p (@{$map->points}) {
 		# Again we assume we have both lat/long values
@@ -129,25 +133,34 @@ sub prepare_raster {
 	
 	die "Map raster file name is not defined!" unless $map->file;
 	
-	my $filename = $map->filename;
 	my $ext = $map->fileext;
 	
 	die "ozf3 is not supported!" if $ext =~ /^ozf3/;
 	
 	if ($ext eq "ozf2") {
-		my @args = ("@BINDIR@/ozf2tiff", $filename . "." . $ext, $filename . ".tif");
+
+		my @args = ("@BINDIR@/ozf2tiff");
+		push @args, $map->file;
+
+		$map->setFileext('tif');
+		push @args, $map->file;
+
+		unlink $map->file;
+
 		system(@args);
-		$ext = "tif";	
+
+		push @tmpfiles, $map->file;
 	}
 	
-	$map->setFileext($ext);
 	
-	my $data = Geo::GDAL::Dataset::Open($map->file);
-	die "Unable to open map raster data" unless $data;
+	if (exists($opts{'keep-raster-size'}) && !exists($opts{'output-projected'})) {
+		my $data = Geo::GDAL::Dataset::Open($map->file);
+		die "Unable to open map raster data" unless $data;
 
-	my ($width, $height) = $data->Size();
-	$map->setWidth($width);
-	$map->setHeight($height);
+		my ($width, $height) = $data->Size();
+		$map->setWidth($width);
+		$map->setHeight($height);
+	}
 	
 	return $map;
 }
@@ -157,7 +170,7 @@ sub to_tagged_gtiff {
 	
 	my @args = ("@GDAL_TRANSLATE@", "-of", "GTiff");
 
-	my $a_srs = $projData->latlong($map);
+	my $a_srs = ProjData::latlong($map);
 	
 	push @args, "-a_srs";
 	push @args, $a_srs;
@@ -172,11 +185,15 @@ sub to_tagged_gtiff {
 	}
 
 	push @args, $map->file;
-	push @args, $map->filename . ".gtf";
+
+	$map->setFileext("tagged.tif");
+	push @args, $map->file;
+
+	unlink $map->file;
 	
 	system(@args);
 	
-	$map->setFileext("gtf");
+	push @tmpfiles, $map->file;
 
 	return $map;	
 }
@@ -188,18 +205,24 @@ sub warp {
 
 	push @args, ("-co", "TILED=YES") if exists($opts{'tiled'});
 	push @args, ("-co", "COMPRESS=LZW") if exists($opts{'lzw'});
-	push @args, ("-co", "BLOCKXSIZE=". $opts{'tile-size-x'}) if exists($opts{'tile-size-x'});
-	push @args, ("-co", "BLOCKYSIZE=". $opts{'tile-size-y'}) if exists($opts{'tile-size-y'});
+	push @args, ("-co", "BLOCKXSIZE=". $opts{'tile-size-x'}) if exists($opts{'tiled'}) && exists($opts{'tile-size-x'});
+	push @args, ("-co", "BLOCKYSIZE=". $opts{'tile-size-y'}) if exists($opts{'tiled'}) && exists($opts{'tile-size-y'});
 
 	push @args, "-tps";
+	push @args, "-r";
+	push @args, "near";
 	
-	push @args, "-ts";
-	push @args, $map->width;
-	push @args, $map->height;
+	if ($map->width && $map->height) {
+		push @args, "-ts";
+		push @args, $map->width;
+		push @args, $map->height;
+	}
 
-	my $s_srs = $projData->latlong($map);
+	my $s_srs = ProjData::latlong($map);
 	
-	my $t_srs = exists($opts{"output-reproject"}) ? $projData->projected($map) : $projData->latlong($map);
+	my $t_srs = exists($opts{"output-projected"}) ? 
+		ProjData::projected($map, $opts{"output-wgs84"}) : 
+		ProjData::latlong($map, $opts{"output-wgs84"});
 	
 	push @args, "-s_srs";
 	push @args, $s_srs;
@@ -208,12 +231,14 @@ sub warp {
 
 
 	push @args, $map->file;
-	push @args, $map->filename . ".gtiff";
+
+	$map->setFileext("gtiff.tif");
+	push @args, $map->file;
+
+	unlink $map->file;
 	
 	system(@args);
 	
-	$map->setFileext("gtiff");
-
 	return $map;	
 }
 
@@ -472,20 +497,10 @@ package ProjData;
 %datums = ();
 %projs = ();
 
-sub new {
-	my $class = shift;
-
-	my %opts = (@_);
-
-	my $self = {};
-	$self->{"opts"} = \%opts;
-	return bless $self, $class;
-}
-
 sub init {
-	my $self = shift;
+	my %opts = (@_);
 	
-	my $dext = $self->{"opts"}->{"correct"} ? "corrected" : "ozi";
+	my $dext = $opts{"correct"} ? "corrected" : "ozi";
 	
 	open(DAT, "@pkgdatadir@/datum_$dext.dat") || die("Failed to load datum mappings @pkgdatadir@/datum_$dext.dat\n");
 	while(<DAT>) {
@@ -503,18 +518,18 @@ sub init {
 }
 
 sub latlong {
-	my $self = shift;
 	my $map = shift;
-	
-	my $datum = $self->{"opts"}->{"wgs84"} ? "+ellps=WGS84 +datum=WGS84" : $datums{$map->datum};
+	my $isWGS = shift;
+		
+	my $datum = $isWGS ? "+ellps=WGS84 +datum=WGS84" : $datums{$map->datum};
 	die "Unknown or unsupported datum " .  $map->datum unless $datum;
 
 	return "+proj=latlong " . $datum . " +no_defs";		
 }
 
 sub projected {
-	my $self = shift;
 	my $map = shift;
+	my $isWGS = shift;
 	
 	my $proj = $projs{$map->projection};
 	die "Unknown or unsupported projection " .  $map->projection unless $proj;
@@ -525,12 +540,15 @@ sub projected {
 	}
 	$proj = '"' . $proj . '"';	
 	
-	my $datum = $self->{"opts"}->{"wgs84"} ? "+ellps=WGS84 +datum=WGS84" : $datums{$map->datum};
+	my $datum = $isWGS ? "+ellps=WGS84 +datum=WGS84" : $datums{$map->datum};
 	die "Unknown or unsupported datum " .  $map->datum unless $datum;
 	
-	my $t = join(',', Util::parenthize(Util::trim(split(/,/, $map->projParams, -1))));
-	my $p = join(',', Util::trim(split(/,/, $map->projParams, -1)));
+	my $l = $map->projParams;
+	$l =~ s/^[^,]*,//g;
+	my $t = join(',', Util::parenthize(Util::trim(split(/,/, $l, -1))));
+	my $p = join(',', Util::trim(split(/,/, $l, -1)));
 	$p =~ s/^${t}$/$proj/ee;
+	print $p . "\n";
 	
 	return $p . " " . $datum . " +no_defs";	
 }

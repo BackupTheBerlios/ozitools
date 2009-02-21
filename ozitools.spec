@@ -45,6 +45,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jan 26 2009 Mikhail Rumyantsev <dev@beonway.ru>
+* Sat Feb 21 2009 Mikhail Rumyantsev <dev@beonway.ru>
 - Initial build.
 
