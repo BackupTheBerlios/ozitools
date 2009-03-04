@@ -1,13 +1,148 @@
-.TH map2geotiff
+.TH map2geotiff 1 "Mar 04 2009" OziTools
 .SH NAME
-Create GeoTIFF file from OziExlorer .map file.
+map2geotiff \- create GeoTIFF file from OziExlorer .map file.
 .SH SYNOPSIS
 .B map2geotiff
-.I <file.ozf> <file.tif>
+[
+.B \-?|\-\-help
+] [
+.B \-w|\-\-output\-wgs84
+] [
+.B \-p|\-\-output\-projected
+] [
+.B \-e|\-\-use\-epsg
+] [
+.B \-l|\-\-lzw
+] [
+.B \-t|\-\-tiled
+] [
+.B \-\-tile\-size\-x=\fINUM\fP
+] [
+.B \-\-tile\-size\-y=\fINUM\fP
+] [
+.B \-r|\-\-keep\-raster\-size
+] [
+.B \-\-keep\-tmpfiles
+]
+mapfile.map
 .SH DESCRIPTION
-None yet
+The command creates georeferenced TIFF raster from OziExplorer map. Resulting GeoTIFF
+can further be used in GIS applications.
+.P
+When successfully completed the command creates
+.I mapfile.gtiff.tif
+file in current directory. Make sure the raster specified in .map is accessible.
+.P
+map2geotiff uses OziExplorer calibration data to create georeference information
+for GeoTIFF. Calibration points are used for polynomial raster transformation (warping).
+As a result, georeferenced TIFF is created which contains raster along with data required
+to convert pixels to geographic coordinates.
+.P
+Calibration point coordinates in OziExplorer .map file can be either
+lat/long or projected. All geodetic datums of OziExplorer 3.95.4s are
+supported as well as most of projections. 
+.SH OPTIONS
+.P
+.B \-?, \-\-help
+.RS
+Print brief help on command usage and options.
+.RE
+.P
+.B \-w, \-\-output\-wgs84
+.RS
+Recalculate latitude/longitude coordinates to WGS84 before saving them in GeoTIFF
+or applying any projections. By default, datum specified in OziExplorer .map file
+will be used. This option is useful if you plan to apply any further datum shift
+to GeoTIFF data, since it could be hard to get uncommon datum/ellipsoid parameters
+back from GeoTIFF.
+.RE
+.P
+.B \-p, \-\-output\-projected
+.RS
+Warp output raster to apply projection specified in OziExplorer .map file
+and make GeoTIFF to be referenced with projected coordinates.
+.P
+This option doesn't work when
+.B \-r
+is also set.
+.RE
+.P
+.B \-e, \-\-use\-epsg
+.RS
+Use alternative datum translation coefficients. OziExplorer use three-parameter
+translation to recalculate between datums. EPSG uses different parameter values
+or even seven-parameter translation for some standard (yet uncommon) datums.
+Using this option you can enable using alternative EPSG parameters which can
+provide better results in some cases.
+.P
+Not all OziExplorer datums have alternatives. Currently you can get error about
+unknown or unsupported datum when using this option, there is no fallback to
+OziExplorer default parameters.
+.RE
+.P
+.B \-l, \-\-lzw
+.RS
+Apply LZW compression to output raster data. By default raster is uncompressed.
+.RE
+.P
+.B \-t, \-\-tiled
+.RS
+Create tiled TIFF.
+.RE
+.P
+.B \-\-tile\-size\-x=\fINUM\fP
+.RS
+Tile width in pixels, default is 256.
+.RE
+.P
+.B \-\-tile\-size\-y=\fINUM\fP
+.RS
+Tile height in pixels, default is 256.
+.RE
+.P
+.B \-r, \-\-keep\-raster\-size
+.RS
+Keep raster pixel dimensions when warping. Option is useful if you prefer 
+unprojected (lat/long) coordinates to georeference your GeoTIFF. Most scanned
+maps have different degree-per-pixel scale in vertical and horizontal direction
+due to geographic projection applied, so raster aspect ratio is changed after
+warping it to lat/long. This option allows one to keep raster visually "projected"
+while using degree coordinates to reference locations in GeoTIFF. 
+.P
+When used with
+.B \-p
+option, makes it ineffective.
+.RE
+.P
+.B \-\-keep\-tmpfiles
+.RS
+Do not delete temporary bitmaps. map2geotiff utility creates some intermediate
+bitmap files, this option disables removal of them. Use it to solve problems. 
+.RE
 .SH EXAMPLE
-map2geotiff ozimap.map
+.RS
+# map2geotiff -p ozimap.map
+.RE
+.P
+Create
+.I ozimap.gtiff.tif
+file georeferenced by projected coordinates. Projection, datum and calibration
+point coordinates will be taken from
+.I ozimap.map
+file.
+.P
+.RS
+# map2geotiff -rwel ozimap.map
+.RE
+.P
+Create
+.I ozimap.gtiff.tif
+file georeferenced by geographic (lat/long) coordinates. Projection, datum
+and calibration point coordinates will be taken from
+.I ozimap.map
+file. Output coordinates will be translated to WGS84 using
+alternative (compared to OziExplorer) datum shift parameters.
+Output raster will be LZW-compressed.
 .SH AUTHOR
 .P 
 Mikhail Rumyantsev <dev@beonway.ru>
