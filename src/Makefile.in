@@ -33,7 +33,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 bin_PROGRAMS = ozf2tiff$(EXEEXT)
 subdir = src
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(srcdir)/map2geotiff.pl.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
 	$(top_srcdir)/configure.in
@@ -41,7 +42,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = map2geotiff.pl
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
@@ -72,6 +73,7 @@ CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CHMOD = @CHMOD@
+CP = @CP@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
@@ -85,6 +87,7 @@ EXEEXT = @EXEEXT@
 GDALWARP = @GDALWARP@
 GDAL_TRANSLATE = @GDAL_TRANSLATE@
 GREP = @GREP@
+GZIP = @GZIP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -152,17 +155,11 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-INCLUDES = -I${top_builddir} -I${top_srcdir}
+AM_CPPFLAGS = -I${top_builddir} -I${top_srcdir}
 ozf2tiff_SOURCES = ozf2tiff.c
 bin_SCRIPTS = map2geotiff
-CLEANFILES = $(bin_SCRIPTS)
-EXTRA_DIST = map2geotiff.in.pl
-do_subst = $(SED) -e 's,[@]PERL[@],$(PERL),g' \
-	-e 's,[@]GDAL_TRANSLATE[@],$(GDAL_TRANSLATE),g' \
-	-e 's,[@]GDALWARP[@],$(GDALWARP),g' \
-	-e 's,[@]pkgdatadir[@],$(pkgdatadir),g' \
-	-e 's,[@]BINDIR[@],$(bindir),g'
-
+CLEANFILES = $(bin_SCRIPTS) map2geotiff.pl
+EXTRA_DIST = map2geotiff.pl.in
 all: all-am
 
 .SUFFIXES:
@@ -196,6 +193,8 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+map2geotiff.pl: $(top_builddir)/config.status $(srcdir)/map2geotiff.pl.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -443,9 +442,19 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS
 	uninstall-binSCRIPTS
 
 
-map2geotiff: map2geotiff.in.pl Makefile
-	$(do_subst) < ${srcdir}/map2geotiff.in.pl > ${builddir}/map2geotiff
-	$(CHMOD) 775 ${builddir}/map2geotiff
+#do_subst = $(SED) -e 's,[@]PERL[@],$(PERL),g' \
+#	-e 's,[@]GDAL_TRANSLATE[@],$(GDAL_TRANSLATE),g' \
+#	-e 's,[@]GDALWARP[@],$(GDALWARP),g' \
+#	-e 's,[@]pkgdatadir[@],$(pkgdatadir),g' \
+#	-e 's,[@]BINDIR[@],$(bindir),g'
+#
+#map2geotiff: map2geotiff.in.pl Makefile
+#	$(do_subst) < ${srcdir}/map2geotiff.in.pl > ${builddir}/map2geotiff
+#	$(CHMOD) 775 ${builddir}/map2geotiff
+
+map2geotiff: map2geotiff.pl Makefile
+	$(CP) map2geotiff.pl map2geotiff
+	$(CHMOD) 775 map2geotiff
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

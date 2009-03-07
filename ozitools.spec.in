@@ -1,12 +1,12 @@
 Name:           ozitools
-Version:        1.0.0
+Version:        @PACKAGE_VERSION@
 Release:        1%{?dist}
 Summary:        A set of utilities to convert OziExplorer maps to other formats.
 
 Group:          Applications/Productivity
 License:        GPL
 URL:            http://www.beonway.ru/ozitools
-Source0:        %{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libtiff-devel zlib-devel perl gdal-perl
@@ -42,10 +42,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog COPYING README
 %_bindir
 %_datadir/%{name}
-
-
+%_mandir/man[1-7]
 
 %changelog
-* Sat Feb 21 2009 Mikhail Rumyantsev <dev@beonway.ru>
-- Initial build.
+* Sat Mar 07 2009 Mikhail Rumyantsev <dev@beonway.ru> 1.0.1
+- Add man pages 
+- Clear build procedure
+- Autogenerate Fedora RPM spec file
 
+* Sat Feb 21 2009 Mikhail Rumyantsev <dev@beonway.ru> 1.0.0
+- Initial build.

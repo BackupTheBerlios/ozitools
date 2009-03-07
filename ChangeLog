@@ -1,0 +1,10 @@
+2009-03-07  Mikhail Rumyantsev  <dev@beonway.ru>
+
+	* 1.0.1: 
+		-- Add man pages 
+		-- Clear build procedure
+		-- Autogenerate Fedora RPM spec file
+
+2009-02-21  Mikhail Rumyantsev  <dev@beonway.ru>
+
+	* 1.0.0: Initial public release

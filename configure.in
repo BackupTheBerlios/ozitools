@@ -2,18 +2,29 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT([ozitools], [1.0.0], [dev@beonway.ru])
+
+m4_define([VERSION_MAJOR], [1])
+m4_define([VERSION_MINOR], [0])
+m4_define([VERSION_MICRO], [1])
+
+AC_INIT([ozitools], [VERSION_MAJOR.VERSION_MINOR.VERSION_MICRO], [dev@beonway.ru])
 AC_CONFIG_SRCDIR([src/ozf2tiff.c])
 AC_CONFIG_HEADERS([config.h])
+
 AC_CONFIG_FILES(Makefile src/Makefile data/Makefile man/Makefile)
 
-AM_INIT_AUTOMAKE(ozitools, 1.0.0)
+AC_CONFIG_FILES(src/map2geotiff.pl)
+AC_CONFIG_FILES(ozitools.spec)
+
+AM_INIT_AUTOMAKE([1.10 -Wall -Werror no-dist-gzip dist-bzip2])
 
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_SED
+AC_PATH_PROG(CP, cp)
 AC_PATH_PROG(CHMOD, chmod)
+AC_PATH_PROG(GZIP, gzip)
 AC_PATH_PROG(PERL, perl)
 AC_PATH_PROG(GDAL_TRANSLATE, gdal_translate)
 AC_PATH_PROG(GDALWARP, gdalwarp)

@@ -63,6 +63,7 @@ CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CHMOD = @CHMOD@
+CP = @CP@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
@@ -76,6 +77,7 @@ EXEEXT = @EXEEXT@
 GDALWARP = @GDALWARP@
 GDAL_TRANSLATE = @GDAL_TRANSLATE@
 GREP = @GREP@
+GZIP = @GZIP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -143,7 +145,6 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-INCLUDES = -I${top_builddir} -I${top_srcdir}
 dist_pkgdata_DATA = datum_ozi.dat datum_corrected.dat proj.dat
 all: all-am
 
