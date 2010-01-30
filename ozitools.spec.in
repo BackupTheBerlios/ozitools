@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %_mandir/man[1-7]
 
 %changelog
+* Sat Jan 30 2010 Mikhail Rumyantsev <dev@beonway.ru> 1.0.2
+- Fix building procedure. 
+
 * Sat Mar 07 2009 Mikhail Rumyantsev <dev@beonway.ru> 1.0.1
 - Add man pages 
 - Clear build procedure
