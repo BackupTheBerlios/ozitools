@@ -502,14 +502,14 @@ sub init {
 	
 	my $dext = $opts{"correct"} ? "corrected" : "ozi";
 	
-	open(DAT, "@pkgdatadir@/datum_$dext.dat") || die("Failed to load datum mappings @pkgdatadir@/datum_$dext.dat\n");
+	open(DAT, "@PKGDATADIR@/datum_$dext.dat") || die("Failed to load datum mappings @PKGDATADIR@/datum_$dext.dat\n");
 	while(<DAT>) {
 		my($k, $v) = split(/:/, $_);
 		$datums{$k} = $v;
 	}
 	close(DAT);
 
-	open(DAT, "@pkgdatadir@/proj.dat") || die("Failed to load projection mappings @pkgdatadir@/proj.dat\n");
+	open(DAT, "@PKGDATADIR@/proj.dat") || die("Failed to load projection mappings @PKGDATADIR@/proj.dat\n");
 	while(<DAT>) {
 		my($k,$n,$v) = split(/:/, $_);
 		$projs{$k} = $v;
