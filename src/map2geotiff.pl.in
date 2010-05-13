@@ -224,8 +224,8 @@ sub warp {
 		ProjData::projected($map, $opts{"output-wgs84"}) : 
 		ProjData::latlong($map, $opts{"output-wgs84"});
 	
-	push @args, "-s_srs";
-	push @args, $s_srs;
+#	push @args, "-s_srs";
+#	push @args, $s_srs;
 	push @args, "-t_srs";
 	push @args, $t_srs;
 
