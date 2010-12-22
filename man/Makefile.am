@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 otmandir = $(mandir)/man1
 
 otman_DATA = ozf2tiff.1.gz map2geotiff.1.gz
